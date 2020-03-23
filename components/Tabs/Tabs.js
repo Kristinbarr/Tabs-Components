@@ -1,37 +1,42 @@
-
 class TabLink {
   constructor(element) {
     // Assign this.element to the passed in DOM element
-    this.element = element;
+    this.element = element // DOM tab element will be given extra properties
 
     // Get the custom data attribute on the Link
-    this.data = this.element.dataset.tab;
-    console.log(this.data, typeof this.data)
+    this.data = this.element.dataset.tab // taking the data-tab info (1,2,3,4)
 
     // Using the custom data attribute get the associated Item element
-    this.itemElement = document.querySelector(`.tabs-item[data-tab="${this.data}"]`);
-    // console.log('itemElement', this.itemElement)
+    this.itemElement = document.querySelector( //taking cur content by data#
+      `.tabs-item[data-tab="${this.data}"]`
+    )
 
     // Using the Item element, create a new instance of the TabItem class
-    this.tabItem = new TabItem(this.itemElement);
-    // console.log('tabItem', this.tabItem)
+    this.tabItem = new TabItem(this.itemElement) // new obj from cur content
 
     // Add a click event listener on this instance, calling the select method on click
-    this.element.addEventListener('click', () => this.select())
-  };
+    this.element.addEventListener('click', () => {
+      return this.selectLink()
+    })
+    // arrow functions bind to window, not current scope
+    // window scope has the 'new' keyword that creates the context
+    this.element.addEventListener('click',
+      this.selectLink.bind(this)
+    )
+    // regular functions bind to current scope
+  }
 
-  select() {
+  selectLink() { // selects all, finds active, changes html class to change css
     // Get all of the elements with the tabs-link class
-    const links = document.querySelectorAll('.tabs-link');
+    const links = document.querySelectorAll('.tabs-link')
 
     // Using a loop or the forEach method remove the 'tabs-link-selected' class from all of the links
     Array.from(links).forEach(link => {
       link.classList.remove('tabs-link-selected')
-    });
+    })
 
     // Add a class named "tabs-link-selected" to this link
-    this.element.classList.add('tabs-link-selected');
-    console.log(this.element)
+    this.element.classList.add('tabs-link-selected')
 
     // Call the select method on the item associated with this link
     this.tabItem.select()
@@ -41,22 +46,19 @@ class TabLink {
 class TabItem {
   constructor(element) {
     // Assign this.element to the passed in element
-    this.element = element;
+    this.element = element
   }
 
   select() {
     // Select all ".tabs-item" elements from the DOM
-    const items = document.querySelectorAll('.tabs-item');
+    const items = document.querySelectorAll('.tabs-item')
 
     Array.from(items).forEach(item => {
-      console.log('select tabITEM', item)
       // Remove the class "tabs-item-selected" from each element
       item.classList.remove('tabs-item-selected')
-      // console.log('select tabITEM remove', item)
     })
     // Add a class named "tabs-item-selected" to this element
-    this.element.classList.add('tabs-item-selected');
-    // console.log('select tabITEM add', item)
+    this.element.classList.add('tabs-item-selected')
   }
 }
 
@@ -70,6 +72,6 @@ class TabItem {
 
 */
 
-links = document.querySelectorAll('.tabs-link');
+links = document.querySelectorAll('.tabs-link')
 
 links.forEach(link => new TabLink(link))
